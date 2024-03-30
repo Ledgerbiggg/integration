@@ -1,0 +1,11 @@
+my_service:
+  description: 请求本地一次
+
+my_service2:
+  description: 请求本地一次,带参数请求
+  fields:
+    url:
+      description: 地址
+      example: http://192.168.140.58:8000/user
+      selector:
+        text:
