@@ -40,16 +40,11 @@ async def async_setup(hass: HomeAssistant, hass_config):
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(entry, "light")
-    )
+    hass.async_create_task(hass.config_entries.async_forward_entry_setup(entry, "light"))
+    hass.async_create_task(hass.config_entries.async_forward_entry_setup(entry, "switch"))
     return True
 
-#
-# async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-#     return
-#
-#
+
 # async def async_update_options(hass: HomeAssistant, entry: ConfigEntry):
 #     return
 #
