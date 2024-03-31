@@ -1,0 +1,15 @@
+{
+  "config": {
+    "error": {
+      "invalid_room": "所选房间无效。请再选一个。"
+    },
+    "step": {
+      "user": {
+        "description": "请选择一个房间",
+        "data": {
+          "name": "房间"
+        }
+      }
+    }
+  }
+}

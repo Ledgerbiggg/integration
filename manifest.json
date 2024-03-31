@@ -1,5 +1,13 @@
 {
   "domain": "hello_state",
   "name": "我的测试集成",
+  "codeowners": [
+    "@ledger"
+  ],
+  "config_flow": true,
+  "documentation": "https://baidu.com",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/hasscc/tianqi/issues",
+  "requirements": [],
   "version": "0.1.0"
 }
