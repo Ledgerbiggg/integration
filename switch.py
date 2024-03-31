@@ -2,6 +2,7 @@ from homeassistant.components.switch import SwitchEntity
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+    # hass.states.set("hello_state.world", "closed")
     async_add_entities([HelloSwitch(hass, "my_switch")])
 
 
