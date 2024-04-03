@@ -4,12 +4,13 @@ from homeassistant.helpers.entity_platform import async_get_platforms
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers import config_validation as cv, entity_platform
+import voluptuous as vol
 
 from .light import MyLight
 
 DOMAIN = "hello_state"
 _LOGGER = logging.getLogger(__name__)
-
 
 async def async_setup(hass: HomeAssistant, hass_config):
     """
@@ -34,12 +35,6 @@ async def async_setup(hass: HomeAssistant, hass_config):
             response_text = response.text()
             _LOGGER.info(response_text)
 
-    # # 添加设备
-    # my_light = MyLight()
-    # hass.data.setdefault("hello_state", []).append(my_light)
-    # async_add_entities([my_light], update_before_add=True)
-    # 将设备绑定到集成上面
-
     # 添加开关
     hass.helpers.discovery.load_platform('switch', "hello_state", {}, hass_config)
     # 添加服务
@@ -59,26 +54,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """
     """设置设备和实体"""
 
-    # 在这里你可以创建和存储设备实例，它可以是一个智能开关、传感器或任何其他设备
-    # device = MyDeviceSwitch(entry.data['name'])
+    """Set up a configuration entry for your custom integration."""
+    # Your custom setup code, if any
 
-    # 创建并初始化开关实体
-    # async def async_add_device_entities():
-    #     """添加和注册这个设备相关的实体。"""
-    #     # 获取开关平台
-    #     platform = await async_get_platforms(hass, DOMAIN)
-    #     sender = util.RequestSender()
-    #     sender.send_request()
-    #
-    #     # 创建开关实体。这应该是你在switch模块定义的实体类
-    #     my_switch_entity = MyDeviceSwitch("newSwitch")
-    #
-    #     # 如果你的实体还有其它的设置，可以在此处配置
-    #
-    #     # 添加实体
-    #     if platform:
-    #         platform[0].async_add_entities([my_switch_entity])
-    #
-    # hass.async_create_task(async_add_device_entities())
+    hass.async_create_task(
+        hass.config_entries.async_forward_entry_setup(entry, "switch")
+    )
 
     return True
