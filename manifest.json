@@ -7,7 +7,7 @@
   "config_flow": true,
   "documentation": "https://baidu.com",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/hasscc/tianqi/issues",
+  "issue_tracker": "https://www.baidu.com/s?wd=问题",
   "requirements": [],
   "version": "0.1.0"
 }
