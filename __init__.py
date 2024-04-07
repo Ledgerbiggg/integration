@@ -1,16 +1,22 @@
 import logging
-from .switch import MyDeviceSwitch
 from homeassistant.helpers.entity_platform import async_get_platforms
+from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers import config_validation as cv, entity_platform
+from homeassistant.const import (
+    Platform,
+)
 import voluptuous as vol
 
-from .light import MyLight
+
+COMPONENTS_WITH_CONFIG_ENTRY_DEMO_PLATFORM = [
+    Platform.LIGHT,
+]
 
 DOMAIN = "hello_state"
 _LOGGER = logging.getLogger(__name__)
+
 
 async def async_setup(hass: HomeAssistant, hass_config):
     """
@@ -20,31 +26,39 @@ async def async_setup(hass: HomeAssistant, hass_config):
     :param hass_config:  HomeAssistant的配置信息，包含了所有配置文件中的数据。
     :return: 初始化成功则返回True，否则返回False
     """
+    # 这个可以在没有初始设备集成进来的时候不报错
+    if not hass.config_entries.async_entries(DOMAIN):
+        hass.async_create_task(
+            hass.config_entries.flow.async_init(
+                DOMAIN, context={"source": config_entries.SOURCE_IMPORT}, data={}
+            )
+        )
+
+    if DOMAIN not in hass_config:
+        return True
 
     # 添加服务
-    async def handle_my_service(call):
-        # 服务需要传入参数
-        url = call.data.get('url',
-                            'http://192.168.31.55:8000')
-        username = call.data.get('username', 'ledger')
-        # 添加参数
-        params = {'username': username}
-        # 获取一个http请求的客户端
-        session = async_get_clientsession(hass)
-        async with session.get(url, params=params) as response:
-            response_text = response.text()
-            _LOGGER.info(response_text)
+    # async def handle_my_service(call):
+    #     # 服务需要传入参数
+    #     url = call.data.get('url',
+    #                         'http://192.168.31.55:8000')
+    #     username = call.data.get('username', 'ledger')
+    #     # 添加参数
+    #     params = {'username': username}
+    #     # 获取一个http请求的客户端
+    #     session = async_get_clientsession(hass)
+    #     async with session.get(url, params=params) as response:
+    #         response_text = response.text()
+    #         _LOGGER.info(response_text)
 
-    # 添加开关
-    hass.helpers.discovery.load_platform('switch', "hello_state", {}, hass_config)
     # 添加服务
-    hass.services.async_register(DOMAIN, 'my_service', handle_my_service)
+    # hass.services.async_register(DOMAIN, 'hello_service', handle_my_service)
     # 添加灯光
-    hass.helpers.discovery.load_platform("light", "hello_state", {}, hass_config)
+    # hass.helpers.discovery.load_platform("light", "hello_state", {}, hass_config)
     return True
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
+async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     """
     这个函数在添加或更新每一个集成的配置入口时被调用。
     对于每一个配置入口，函数将执行一次。
@@ -57,8 +71,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up a configuration entry for your custom integration."""
     # Your custom setup code, if any
 
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(entry, "switch")
+    # await hass.async_create_task(
+    #     hass.config_entries.async_forward_entry_setup(config_entry, "switch")
+    # )
+
+    await hass.config_entries.async_forward_entry_setups(
+        config_entry, COMPONENTS_WITH_CONFIG_ENTRY_DEMO_PLATFORM
     )
 
     return True
